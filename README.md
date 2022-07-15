@@ -1,6 +1,6 @@
 ### [Live Site](https://reactjs-movieapp-osifojohn.netlify.app)
 
-![ReactJs-Movie-App](https://i.ibb.co/0n0mgp9/tmdb-image.jpg)
+![ReactJs-Movie-App](https://i.ibb.co/jJNGDBV/tmdbfinish.jpg)
 
 ## Available Scripts
 

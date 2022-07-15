@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useCallback } from "react";
 import { MOVIE_API_ACCESS_KEY } from "./SingleMovie";
-
+import { MovieData } from "./MovieData";
 const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
@@ -14,10 +14,11 @@ const AppProvider = ({ children }) => {
   const [movies, setMovies] = useState([]);
   const [query, setQuery] = useState("");
   const [hasMore, setHasMore] = useState(false);
+  const [movieUrl, setMovieUrl] = useState("");
 
   useEffect(() => {
     setMovies([]);
-  }, [query]);
+  }, [query, movieUrl]);
 
   const fetchMovies = useCallback(async () => {
     setIsLoading(true);
@@ -27,7 +28,15 @@ const AppProvider = ({ children }) => {
     if (query) {
       url = `https://api.themoviedb.org/3/search/movie?api_key=${MOVIE_API_ACCESS_KEY}&language=en-US${urlPage}&include_adult=false${urlQuery}`;
     } else {
-      url = `https://api.themoviedb.org/3/movie/popular?api_key=${MOVIE_API_ACCESS_KEY}&language=en-US${urlPage}`;
+      let popularMovieUrl = MovieData[0];
+      if (movieUrl) {
+        popularMovieUrl = "";
+        url = `${movieUrl}${MOVIE_API_ACCESS_KEY}&language=en-US${urlPage}`;
+      }
+
+      if (popularMovieUrl) {
+        url = `${popularMovieUrl}${MOVIE_API_ACCESS_KEY}&language=en-US${urlPage}`;
+      }
     }
 
     try {
@@ -61,10 +70,11 @@ const AppProvider = ({ children }) => {
       setIsLoading(false);
     }
     setIsLoading(false);
-  }, [page, query]);
+  }, [page, query, movieUrl]);
+
   useEffect(() => {
     fetchMovies();
-  }, [page, fetchMovies]);
+  }, [page, movieUrl, fetchMovies]);
 
   return (
     <AppContext.Provider
@@ -81,6 +91,8 @@ const AppProvider = ({ children }) => {
         searchResultInfo,
         setSearchResultInfo,
         data,
+        movieUrl,
+        setMovieUrl,
       }}
     >
       {children}
